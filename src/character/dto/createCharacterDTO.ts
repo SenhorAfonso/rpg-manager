@@ -7,6 +7,7 @@ class CharacterType {
   private proficiencies: string;
   private spells: string;
   private magicItem: string;
+  private lore?: string;
 }
 
 export default CharacterType;

@@ -67,6 +67,13 @@ export class Character {
   })
     charLevel: number;
 
+  @Prop({
+    minlength: 6,
+    required: [true, 'Lore is a required field!'],
+    trim: true
+  })
+    lore: string;
+
 }
 
 export type CharacterDocument = HydratedDocument<Character>;

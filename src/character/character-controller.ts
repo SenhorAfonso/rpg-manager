@@ -1,10 +1,11 @@
 /* eslint-disable require-await */
 /* eslint-disable class-methods-use-this */
-import { Controller, Body, Post, UseGuards } from '@nestjs/common';
+import { Controller, Body, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import CharacterService from './character-service';
 import ValidateCharInfo from './guards/ValidateCharInfo';
 import ValidateCharLevel from './guards/ValidateCharLevel';
 import CharacterType from './dto/createCharacterDTO';
+import CreateLoreInterceptor from './interceptors/CreateLoreInterceptor';
 
 @Controller('/character')
 class CharacterController {
@@ -13,6 +14,7 @@ class CharacterController {
 
   @Post('/create-char')
   @UseGuards(ValidateCharInfo, ValidateCharLevel)
+  @UseInterceptors(CreateLoreInterceptor)
   async settingClass(
     @Body() createCharacterDTO: CharacterType
   ) {

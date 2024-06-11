@@ -11,7 +11,7 @@ class ValidateCharInfo implements CanActivate {
     }
 
     const fetchPomises = Object.entries(body).map(async ([attribute, value]) => {
-      if (attribute === 'name' || attribute === 'charLevel') {
+      if (attribute === 'name' || attribute === 'charLevel' || attribute === 'lore') {
         return;
       }
       const response = await fetch(`https://www.dnd5eapi.co/api/${attribute}/${value}`);
