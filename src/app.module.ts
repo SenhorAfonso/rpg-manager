@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import UsersModule from './users/user-module';
+import CharactersModule from './character/character-module';
+import GameModule from './game/game-module';
 
 @Module({
   imports: [
@@ -9,7 +11,9 @@ import UsersModule from './users/user-module';
     ConfigModule.forRoot({
       isGlobal: true
     }),
-    UsersModule
+    UsersModule,
+    CharactersModule,
+    GameModule
   ],
   controllers: [],
   providers: [],
