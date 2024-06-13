@@ -9,8 +9,13 @@ class CharacterRepository {
 
   constructor(@InjectModel(Character.name) private characterModel: Model<CharacterDocument>) { }
 
-  async createChar(createCharacterDTO: CharacterType) {
+  async createChar(createCharacterDTO: CharacterType): Promise<CharacterDocument> {
     const result = await this.characterModel.create(createCharacterDTO);
+    return result;
+  }
+
+  async findByName(name: string) {
+    const result = await this.characterModel.findOne({ name });
     return result;
   }
 

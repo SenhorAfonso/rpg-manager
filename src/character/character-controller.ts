@@ -28,36 +28,6 @@ class CharacterController {
     return result;
   }
 
-  @Post(':char/set-feats/:feat')
-  @UseGuards(ValidateCharInfo)
-  async settingFeature2() {
-    return 'Setting char feature';
-  }
-
-  @Post(':char/set-alignment/:alignment')
-  @UseGuards(ValidateCharInfo)
-  async settingFeature3() {
-    return 'Setting char feature';
-  }
-
-  @Post(':char/set-proficiencies/:proficiency')
-  @UseGuards(ValidateCharInfo)
-  async settingFeature4() {
-    return 'Setting char feature';
-  }
-
-  @Post(':char/set-spells/:spell')
-  @UseGuards(ValidateCharInfo)
-  async settingFeature5() {
-    return 'Setting char feature';
-  }
-
-  @Post(':char/set-item/:item')
-  @UseGuards(ValidateCharInfo)
-  async settingFeature6() {
-    return 'Setting char feature';
-  }
-
 }
 
 export default CharacterController;

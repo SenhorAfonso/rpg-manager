@@ -10,7 +10,8 @@ import CharacterRepository from './character-repository';
     MongooseModule.forFeature([{ name: Character.name, schema: CharacterSchema }])
   ],
   controllers: [CharacterController],
-  providers: [CharacterService, CharacterRepository]
+  providers: [CharacterService, CharacterRepository],
+  exports: [MongooseModule]
 })
 class CharactersModule {}
 export default CharactersModule;
