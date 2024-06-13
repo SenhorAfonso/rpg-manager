@@ -53,6 +53,11 @@ class UsersService {
 
     return { logedUser, token };
   }
+
+  async deleteUser(userID: string) {
+    const result = await this.userRepository.deleteUser(userID);
+    return result;
+  }
 }
 
 export default UsersService;

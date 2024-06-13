@@ -19,7 +19,7 @@ class UsersRepository {
       throw new DuplicatedContentException('Email already in use. Try /users/login');
     }
 
-    const result = this.userModel.create(createUserPayload);
+    const result = await this.userModel.create(createUserPayload);
     return result;
   }
 
@@ -33,8 +33,8 @@ class UsersRepository {
     return result;
   }
 
-  getById(id: string): Promise<UserDocument> {
-    const result = this.userModel.findById({ _id: id });
+  async getById(id: string): Promise<UserDocument> {
+    const result = await this.userModel.findById({ _id: id });
 
     if (!result) {
       throw new NotFoundException('There is no user with such id');
@@ -43,8 +43,8 @@ class UsersRepository {
     return result;
   }
 
-  updateUser(id: string, newInfo: CreateUserType): Promise<UserDocument> {
-    const updated = this.userModel.findById({ _id: id }, newInfo, { new: true });
+  async updateUser(id: string, newInfo: CreateUserType): Promise<UserDocument> {
+    const updated = await this.userModel.findById({ _id: id }, newInfo, { new: true });
     return updated;
   }
 
@@ -59,6 +59,11 @@ class UsersRepository {
       throw new BadRequestException('Either the password or email are incorrect!');
     }
 
+    return result;
+  }
+
+  async deleteUser(userID: string) {
+    const result = await this.userModel.findByIdAndDelete(userID);
     return result;
   }
 

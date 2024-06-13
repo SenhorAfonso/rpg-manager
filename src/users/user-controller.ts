@@ -1,6 +1,6 @@
 import ZodValidatorPipe from 'src/common/pipes/ZodValidatorPipe';
 import AuthorizationGuard from 'src/common/guards/AuthorizationGuard';
-import { Body, Controller, Get, Post, Put, UseGuards, UsePipes, Param } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UseGuards, UsePipes, Param, Delete } from '@nestjs/common';
 import { UserDocument } from './schemas/user-schema';
 import UsersService from './user-service';
 import { createUserValidatorObject, CreateUserType } from './Validation/create-user-validator';
@@ -55,6 +55,18 @@ class UserController {
     const id = user.user;
     const updatedUser = await this.userService.updateUser(id, updateUserDTO);
     return updatedUser;
+  }
+
+  @Delete(':user')
+  @UseGuards(AuthorizationGuard)
+  async deleteUser(
+    @Param() user: userID
+  ): Promise<
+  UserDocument
+  > {
+    const id = user.user;
+    const deletedUser = await this.userService.deleteUser(id);
+    return deletedUser;
   }
 
 }
