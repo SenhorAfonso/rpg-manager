@@ -1,9 +1,12 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import * as jwt from 'jsonwebtoken';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 class AuthorizationGuard implements CanActivate {
+  constructor(private readonly configService: ConfigService) { }
+
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
 
@@ -18,7 +21,7 @@ class AuthorizationGuard implements CanActivate {
     }
 
     try {
-      jwt.verify(token, 'SUPERSECRETESTRING');
+      jwt.verify(token, this.configService.get<string>('JWT_SECRET'));
       return true;
     } catch {
       throw new UnauthorizedException('You do not permissions to access this content!');
