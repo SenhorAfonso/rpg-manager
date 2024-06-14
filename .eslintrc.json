@@ -22,6 +22,10 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "no-useless-constructor": "off",
+    "import/no-unresolved": "off",
+    "class-methods-use-this":"off",
+    "no-empty-function": "off",
     "no-trailing-spaces": "error",
     "no-param-reassign": "off",
     "padding-line-between-statements": "error",
@@ -69,5 +73,12 @@
       "always"
     ]
   },
-  "overrides": []
+  "overrides": [
+    {
+      "files": ["game-schema.ts", "start-game-dto.ts"],
+      "rules": {
+        "max-classes-per-file": "off"
+      }
+    }
+  ]
 }
