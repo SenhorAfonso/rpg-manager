@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from "@nestjs/common";
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 class NotEnoughLevelException extends HttpException {
   constructor(attribute: string = '') {

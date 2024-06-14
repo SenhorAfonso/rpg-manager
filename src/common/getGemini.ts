@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { GoogleGenerativeAI, GenerativeModel, Content, Part, TextPart } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerativeModel, Content } from '@google/generative-ai';
 import { Inject, Injectable } from '@nestjs/common';
 
 interface geminiConfig {
@@ -39,8 +39,16 @@ class Gemini {
     });
   }
 
-  async sendPrompt(history: any[], prompt) {
+  async sendGamePrompt(history: any[], prompt) {
+    console.log(history)
     const chat = this.createChatSession(history);
+
+    const response = (await chat.sendMessage(prompt)).response.text();
+    return response;
+  }
+
+  async sendGenericPrompt(prompt) {
+    const chat = this.createChatSession([]);
 
     const response = (await chat.sendMessage(prompt)).response.text();
     return response;

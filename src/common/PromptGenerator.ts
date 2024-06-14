@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 class PromptGenerator {
@@ -44,6 +44,17 @@ class PromptGenerator {
 
   finishCombatPrompt(): string {
     return 'Os jogadores derrotaram o inimigo, este deixou cair 3 itens preciosos. Que itens são esses?';
+  }
+
+  createLore(characterSheet: string | null, requirements: string): string {
+    if (characterSheet) {
+      return `
+      Com base nessas informações: ${characterSheet} e nas observações fornecidas pelo usuário: ${requirements},
+      crie uma lore simples para servir de história para um personagem de RPG. Apenas escreva um texto elaborando as informações que recebeu. Não use nada que não seja apenas parágrafos contexto texto puro.`;
+    }
+
+    return `Com base nessas informações: ${characterSheet} crie uma lore simples para servir de
+    história para um personagem de RPG. Apenas escreva um texto elaborando as informações que recebeu. Não use nada que não seja apenas parágrafos contexto texto puro.`;
   }
 
 }
