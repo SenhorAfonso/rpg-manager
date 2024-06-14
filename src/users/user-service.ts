@@ -1,11 +1,10 @@
-/* eslint-disable no-useless-constructor */
 import * as jwt from 'jsonwebtoken';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserDocument } from './schemas/user-schema';
 import UsersRepository from './user-repository';
-import { CreateUserType } from './Validation/create-user-validator';
-import { LoginUserType } from './Validation/login-user-validator';
+import LoginUserDTO from './dto/login-user-dto';
+import RegisterUserDTO from './dto/register-user-dto';
 
 @Injectable()
 class UsersService {
@@ -15,11 +14,11 @@ class UsersService {
     private readonly configService: ConfigService
   ) {}
 
-  async registerUser(createUserPayload: CreateUserType): Promise<{
+  async registerUser(registerUserDTO: RegisterUserDTO): Promise<{
     createdUser: UserDocument,
     token: string
   }> {
-    const createdUser = await this.userRepository.create(createUserPayload);
+    const createdUser = await this.userRepository.create(registerUserDTO);
     const userID = createdUser.id;
     const token = jwt.sign({ userID }, this.configService.get<string>('JWT_SECRET'));
     return { createdUser, token };
@@ -43,7 +42,7 @@ class UsersService {
     return result;
   }
 
-  async loginUser(loginUserDTO: LoginUserType): Promise<{
+  async loginUser(loginUserDTO: LoginUserDTO): Promise<{
     logedUser: UserDocument,
     token: string
   }> {

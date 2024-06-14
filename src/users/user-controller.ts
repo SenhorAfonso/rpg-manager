@@ -1,10 +1,11 @@
-import ZodValidatorPipe from 'src/common/pipes/ZodValidatorPipe';
 import AuthorizationGuard from 'src/common/guards/AuthorizationGuard';
-import { Body, Controller, Get, Post, Put, UseGuards, UsePipes, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UseGuards, UsePipes, Param, Delete, ValidationPipe } from '@nestjs/common';
 import { UserDocument } from './schemas/user-schema';
 import UsersService from './user-service';
-import { createUserValidatorObject, CreateUserType } from './Validation/create-user-validator';
-import { LoginUserType, loginUserValidatorObject } from './Validation/login-user-validator';
+import PasswordHash from './pipes/PasswordHash';
+import LoginUserDTO from './dto/login-user-dto';
+import RegisterUserDTO from './dto/register-user-dto';
+import UpdateUserDTO from './dto/update-user-dto';
 
 interface userID {
   user: string;
@@ -31,24 +32,25 @@ class UserController {
   }
 
   @Post('/register')
-  @UsePipes(new ZodValidatorPipe(createUserValidatorObject))
-  async createNewUser(@Body() createUserDTO: CreateUserType) {
-    const { createdUser, token } = await this.userService.registerUser(createUserDTO);
+  @UsePipes(new ValidationPipe({ transform: true }), PasswordHash)
+  async createNewUser(@Body() registerUserDTO: RegisterUserDTO) {
+    const { createdUser, token } = await this.userService.registerUser(registerUserDTO);
     return { createdUser, token };
   }
 
   @Post('/login')
-  @UsePipes(new ZodValidatorPipe(loginUserValidatorObject))
-  async loginUser(@Body() loginUserDTO: LoginUserType) {
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async loginUser(@Body() loginUserDTO: LoginUserDTO) {
     const { logedUser, token } = await this.userService.loginUser(loginUserDTO);
     return { logedUser, token };
   }
 
   @Put(':user')
   @UseGuards(AuthorizationGuard)
+  @UsePipes(new ValidationPipe({ transform: true }), PasswordHash)
   async updateUser(
     @Param() user: userID,
-    @Body() updateUserDTO: CreateUserType
+    @Body() updateUserDTO: UpdateUserDTO
   ): Promise<
     UserDocument
   > {
