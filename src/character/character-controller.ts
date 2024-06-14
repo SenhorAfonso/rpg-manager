@@ -1,19 +1,19 @@
-/* eslint-disable require-await */
-/* eslint-disable class-methods-use-this */
-import { Controller, Body, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Body, Post, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
+import AuthorizationGuard from 'src/common/guards/AuthorizationGuard';
 import CharacterService from './character-service';
-import ValidateCharInfo from './guards/ValidateCharInfo';
-import ValidateCharLevel from './guards/ValidateCharLevel';
-import CharacterType from './dto/createCharacterDTO';
+import ValidateCharInfo from './pipes/ValidateCharInfo';
+import CharacterType from './dto/CreateCharacterDTO';
 import CreateLoreInterceptor from './interceptors/CreateLoreInterceptor';
+import ValidateCharLevel from './pipes/ValidateCharLevel';
 
 @Controller('/character')
+@UseGuards(AuthorizationGuard)
 class CharacterController {
 
   constructor(private readonly characterService: CharacterService) { }
 
   @Post('/create-char')
-  @UseGuards(ValidateCharInfo, ValidateCharLevel)
+  @UsePipes(ValidateCharInfo, ValidateCharLevel)
   @UseInterceptors(CreateLoreInterceptor)
   async settingClass(
     @Body() createCharacterDTO: CharacterType

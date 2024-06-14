@@ -1,12 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import CharacterRepository from "./character-repository";
-import CharacterType from "./dto/createCharacterDTO";
-import DuplicatedContentException from "src/common/errors/DuplicatedContentException";
+import { Injectable } from '@nestjs/common';
+import DuplicatedContentException from 'src/common/errors/DuplicatedContentException';
+import CharacterRepository from './character-repository';
+import CharacterType from './dto/CreateCharacterDTO';
 
 @Injectable()
 class CharacterService {
 
-  constructor(private readonly characterRepository: CharacterRepository) {}
+  constructor(private readonly characterRepository: CharacterRepository) { }
 
   async createChar(createCharacterDTO: CharacterType) {
     const characterAlreadyExists = await this.characterRepository.findByName(createCharacterDTO.name);
