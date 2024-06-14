@@ -1,10 +1,9 @@
-/* eslint-disable no-useless-constructor */
 import { Injectable } from '@nestjs/common';
 import { Character, CharacterDocument } from 'src/character/schemas/character-schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import InsuficientPlayersException from 'src/common/errors/InsuficientPlayersException';
-import { playerType } from './validation/start-game-validator';
+import { playerType } from './dto/start-game-dto';
 import { Game, GameDocument } from './schema/game-schema';
 
 @Injectable()
@@ -15,11 +14,12 @@ class GameRepository {
     @InjectModel(Game.name) private gameModel: Model<GameDocument>
   ) { }
 
-  async getPlayerSheets(players: playerType) {
+  async getPlayerSheets(players: playerType): Promise<CharacterDocument[]> {
+    const minPlayersQuant: number = 3;
     const charactersSheets: CharacterDocument[] = [];
     const characters = [...new Set([...Object.values(players)])];
 
-    if (characters.length < 3) {
+    if (characters.length < minPlayersQuant) {
       throw new InsuficientPlayersException('Must have at least three different players to start an adventure!');
     }
 
@@ -47,9 +47,8 @@ class GameRepository {
     return [firstRound, game];
   }
 
-  async saveHistory(gameName: string, prompt: string, response: string) {
-    console.log('salvou historico')
-    const gameRecord = await this.gameModel.findOne({ gameName });
+  async saveHistory(gameName: string, prompt: string, response: string): Promise<void> {
+    const gameRecord = await this.gameModel.findOne({ game: gameName });
     gameRecord.context.push({ role: 'user', parts: [prompt] });
     gameRecord.context.push({ role: 'model', parts: [response] });
     await gameRecord.save();

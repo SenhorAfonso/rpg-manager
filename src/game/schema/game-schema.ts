@@ -1,4 +1,3 @@
-/* eslint-disable max-classes-per-file */
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 

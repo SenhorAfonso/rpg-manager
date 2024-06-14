@@ -1,17 +1,20 @@
-import { Controller, Post, Body, UsePipes } from "@nestjs/common";
-import GameService from "./game-service";
-import ZodValidatorPipe from "src/common/pipes/ZodValidatorPipe";
-import { startGameValidatorObject, startGameType } from "./validation/start-game-validator";
+import { Controller, Post, Body, UsePipes, UseGuards, UseInterceptors, ValidationPipe } from '@nestjs/common';
+import AuthorizationGuard from 'src/common/guards/AuthorizationGuard';
+import GameService from './game-service';
+import { StartGameDTO } from './dto/start-game-dto';
+import ActionObjectFormater from './interceptors/FormatActionObjectInterceptor';
 
 @Controller('/game')
+@UseGuards(AuthorizationGuard)
 class GameController {
 
   constructor(private readonly gameService: GameService) { }
 
   @Post('/play')
-  @UsePipes(new ZodValidatorPipe(startGameValidatorObject))
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @UseInterceptors(ActionObjectFormater)
   playAdventure(
-    @Body() gameInfo: startGameType
+    @Body() gameInfo: StartGameDTO
   ) {
     const result = this.gameService.playAdventure(gameInfo);
     return result;
