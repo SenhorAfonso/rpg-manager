@@ -1,6 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { GoogleGenerativeAI, GenerativeModel, Content } from '@google/generative-ai';
 import { Inject, Injectable } from '@nestjs/common';
+import { Context } from 'src/game/schema/game-schema';
 
 interface geminiConfig {
   temperature?: number,
@@ -23,31 +24,30 @@ class Gemini {
     this.model.apiKey = this.configService.get<string>('GEMINI_API_KEY');
   }
 
-  createChatSession(history: any[]) {
-    const newHistory: Content[] = [];
-    history.forEach(element => {
+  createChatSession(context: Context[]) {
+    const newContext: Content[] = [];
+    context.forEach(element => {
       const part = {
         role: element.role as string,
         parts: [{ text: element.parts[0] }]
       };
-      newHistory.push(part);
+      newContext.push(part);
     });
 
     return this.model.startChat({
       generationConfig: this.config,
-      history: newHistory
+      history: newContext
     });
   }
 
-  async sendGamePrompt(history: any[], prompt) {
-    console.log(history)
-    const chat = this.createChatSession(history);
+  async sendGamePrompt(context: Context[], prompt: string) {
+    const chat = this.createChatSession(context);
 
     const response = (await chat.sendMessage(prompt)).response.text();
     return response;
   }
 
-  async sendGenericPrompt(prompt) {
+  async sendGenericPrompt(prompt: string) {
     const chat = this.createChatSession([]);
 
     const response = (await chat.sendMessage(prompt)).response.text();

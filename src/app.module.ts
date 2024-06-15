@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import UsersModule from './users/user-module';
 import CharactersModule from './character/character-module';
 import GameModule from './game/game-module';
+import PopulateModule from './populate/populate-module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import GameModule from './game/game-module';
     }),
     UsersModule,
     CharactersModule,
-    GameModule
+    GameModule,
+    PopulateModule
   ],
   controllers: [],
   providers: [],

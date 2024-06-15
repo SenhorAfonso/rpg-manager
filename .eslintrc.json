@@ -75,9 +75,30 @@
   },
   "overrides": [
     {
-      "files": ["game-schema.ts", "start-game-dto.ts"],
+      "files": ["game-schema.ts", "start-game-dto.ts", "classes-schema.ts", "feats-schema.ts", "features-schema.ts", "magic-items-schema.ts", "proficiencies-schema.ts", "spells-schema.ts"],
       "rules": {
         "max-classes-per-file": "off"
+      }
+    },
+    {
+      "files": ["populate-service.ts"],
+      "rules": {
+        "no-await-in-loop": "off"
+      }
+    },
+    {
+      "files": ["character-service.ts", "populate-repository.ts", "populate-service.ts"],
+      "rules": {
+        "max-params": "off",
+        "no-restricted-syntax": "off",
+        "no-magic-numbers": "off",
+        "no-console": "off"
+      }
+    },
+    {
+      "files": ["LoggerInterceptor.ts"],
+      "rules": {
+        "no-console": "off"
       }
     }
   ]

@@ -9,11 +9,11 @@ class ActionObjectFormater implements NestInterceptor {
     const request = context.switchToHttp().getRequest();
     const { action, players } = request.body;
 
-    for (const key in action) {
+    Object.keys(action).forEach(key => {
       const newKey = players[key];
       action[newKey] = action[key];
       delete action[key];
-    }
+    });
 
     return next.handle().pipe(
       map(data => data)
