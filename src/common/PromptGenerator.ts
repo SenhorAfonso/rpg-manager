@@ -46,8 +46,8 @@ class PromptGenerator {
     return 'Os jogadores derrotaram o inimigo, este deixou cair 3 itens preciosos. Que itens são esses?';
   }
 
-  createLore(characterSheet: string | null, requirements: string): string {
-    if (characterSheet) {
+  createLore(characterSheet: string | null, requirements?: string): string {
+    if (requirements) {
       return `
       Com base nessas informações: ${characterSheet} e nas observações fornecidas pelo usuário: ${requirements},
       crie uma lore simples para servir de história para um personagem de RPG. Apenas escreva um texto elaborando as informações que recebeu. Não use nada que não seja apenas parágrafos contexto texto puro.`;
