@@ -1,4 +1,4 @@
-import { Controller, Body, Post, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Controller, Body, Post, UseGuards, UseInterceptors, UsePipes, Get } from '@nestjs/common';
 import AuthorizationGuard from 'src/common/guards/AuthorizationGuard';
 import CharacterService from './character-service';
 import ValidateCharInfo from './pipes/ValidateCharInfo';
@@ -22,7 +22,7 @@ class CharacterController {
     return result;
   }
 
-  @Post('/help')
+  @Get('/help')
   async settingFeature() {
     const result = await this.characterService.help();
     return result;
