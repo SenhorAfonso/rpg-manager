@@ -10,6 +10,7 @@ import { CharacterFeature, FeatureSchema } from './schemas/features-schema';
 import { CharacterFeats, FeatsSchema } from './schemas/feats-schema';
 import { CharacterMagicItem, MagicItemSchema } from './schemas/magic-items-schema';
 import { CharacterSpell, SpellSchema } from './schemas/spells-schema';
+import { Monster, MonsterSchema } from './schemas/monsters-schema';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CharacterSpell, SpellSchema } from './schemas/spells-schema';
     MongooseModule.forFeature([{ name: CharacterMagicItem.name, schema: MagicItemSchema }]),
     MongooseModule.forFeature([{ name: CharacterProficiency.name, schema: ProficiencySchema }]),
     MongooseModule.forFeature([{ name: CharacterSpell.name, schema: SpellSchema }]),
+    MongooseModule.forFeature([{ name: Monster.name, schema: MonsterSchema }]),
   ],
   controllers: [PopulateController],
   providers: [PopulateService, PopulateRepository]

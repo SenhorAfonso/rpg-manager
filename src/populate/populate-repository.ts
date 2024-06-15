@@ -9,6 +9,7 @@ import { CharacterMagicItem, MagicItemDocument } from './schemas/magic-items-sch
 import { CharacterProficiency, ProficiencyDocument } from './schemas/proficiencies-schema';
 import { CharacterSpell, SpellDocument } from './schemas/spells-schema';
 import FeatureToSchemaEnum from './enums/CharacterFeatures-enum';
+import { Monster, MonsterDocument } from './schemas/monsters-schema';
 
 @Injectable()
 class PopulateRepository {
@@ -21,6 +22,7 @@ class PopulateRepository {
     @InjectModel(CharacterMagicItem.name) private readonly magicItemSchema: Model<MagicItemDocument>,
     @InjectModel(CharacterProficiency.name) private readonly proficiencySchema: Model<ProficiencyDocument>,
     @InjectModel(CharacterSpell.name) private readonly spellSchema: Model<SpellDocument>,
+    @InjectModel(Monster.name) private readonly monstersSchema : Model<MonsterDocument>,
   ) { }
 
   async populate(objectsToSave: object[], schemaName: string) {
@@ -46,6 +48,9 @@ class PopulateRepository {
       case FeatureToSchemaEnum.SPELLS:
         await this.spellSchema.create(objectsToSave);
         break;
+      case FeatureToSchemaEnum.MONSTERS:
+        await this.monstersSchema.create(objectsToSave);
+        break;
       default:
         throw new InternalServerErrorException('Unknow schema');
     }
@@ -59,6 +64,7 @@ class PopulateRepository {
     await this.magicItemSchema.deleteMany({});
     await this.proficiencySchema.deleteMany({});
     await this.spellSchema.deleteMany({});
+    await this.monstersSchema.deleteMany({});
   }
 
 }

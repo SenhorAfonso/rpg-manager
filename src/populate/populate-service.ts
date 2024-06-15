@@ -14,6 +14,7 @@ class PopulateService {
     this.UrlSchemaMap.set('/api/magic-items', FeatureToSchemaEnum.MAGICITEM);
     this.UrlSchemaMap.set('/api/proficiencies', FeatureToSchemaEnum.PROFICIENCY);
     this.UrlSchemaMap.set('/api/spells', FeatureToSchemaEnum.SPELLS);
+    this.UrlSchemaMap.set('/api/monsters', FeatureToSchemaEnum.MONSTERS);
   }
 
   async resetDatabase(): Promise<string> {

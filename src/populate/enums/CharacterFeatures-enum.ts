@@ -5,7 +5,8 @@ enum FeatureToSchemaEnum {
   FEATS = 'featsSchema',
   MAGICITEM = 'magicItemsSchema',
   PROFICIENCY = 'proficienciesSchema',
-  SPELLS = 'spellsSchema'
+  SPELLS = 'spellsSchema',
+  MONSTERS = 'monstersSchema'
 }
 
 export default FeatureToSchemaEnum;
