@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import Gemini from 'src/common/getGemini';
+import { Monster, MonsterDocument } from 'src/populate/schemas/monsters-schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import GameRepository from './game-repository';
 import PromptGenerator from '../common/PromptGenerator';
 import playAdventureType from './types/playAdventureType';
@@ -11,7 +14,8 @@ class GameService {
   constructor(
     private readonly gameRepository: GameRepository,
     private readonly gemini: Gemini,
-    private readonly promptGenerator: PromptGenerator
+    private readonly promptGenerator: PromptGenerator,
+    @InjectModel(Monster.name) private readonly monstersSchema : Model<MonsterDocument>
   ) { }
 
   async playAdventure(gameInfo: StartGameDTO) {
@@ -45,7 +49,8 @@ class GameService {
     await this.gameRepository.saveHistory(game.game, prompt, response);
 
     if (response.includes('COMBATE: DESCONHECIDO')) {
-      const enemySheet = await (await fetch('https://www.dnd5eapi.co/api/monsters/centaur')).json();
+      const enemyList = await this.monstersSchema.find({});
+      const enemySheet = enemyList[Math.floor(Math.random() * enemyList.length)];
       prompt = this.promptGenerator.preCombatPrompt(enemySheet);
       currentResponse = await this.gemini.sendGamePrompt(game.context, prompt);
       await this.gameRepository.saveHistory(game.game, prompt, currentResponse);

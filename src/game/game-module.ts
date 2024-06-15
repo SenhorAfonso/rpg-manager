@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import Gemini from 'src/common/getGemini';
 import { ConfigService } from '@nestjs/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Monster, MonsterSchema } from 'src/populate/schemas/monsters-schema';
 import GameController from './game-controller';
 import GameService from './game-service';
 import GameRepository from './game-repository';
@@ -13,6 +14,7 @@ import PromptGenerator from '../common/PromptGenerator';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Game.name, schema: GameSchema }]),
+    MongooseModule.forFeature([{ name: Monster.name, schema: MonsterSchema }]),
     CharactersModule],
   controllers: [GameController],
   providers: [
