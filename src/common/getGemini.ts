@@ -40,10 +40,10 @@ class Gemini {
     });
   }
 
-  async sendGamePrompt(context: Context[], prompt: string) {
+  async sendGamePrompt(context: Context[], prompt: string): Promise<string> {
     const chat = this.createChatSession(context);
-
     const response = (await chat.sendMessage(prompt)).response.text();
+
     return response;
   }
 

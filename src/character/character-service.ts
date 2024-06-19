@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import DuplicatedContentException from 'src/common/errors/DuplicatedContentException';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CharacterAlignments, AlignmentsDocument } from 'src/populate/schemas/alignments-schema';
@@ -9,12 +8,14 @@ import { CharacterFeature, FeatureDocument } from 'src/populate/schemas/features
 import { CharacterMagicItem, MagicItemDocument } from 'src/populate/schemas/magic-items-schema';
 import { CharacterProficiency, ProficiencyDocument } from 'src/populate/schemas/proficiencies-schema';
 import { CharacterSpell, SpellDocument } from 'src/populate/schemas/spells-schema';
-import CharacterType from './dto/CreateCharacterDTO';
-import CharacterRepository from './character-repository';
 import Gemini from 'src/common/getGemini';
 import PromptGenerator from 'src/common/PromptGenerator';
+import { Either, left, right } from 'src/common/types/either';
+import DuplicatedContentException from 'src/common/errors/DuplicatedContentException';
 import { CharacterDocument } from './schemas/character-schema';
-import { object } from 'zod';
+import CharacterRepository from './character-repository';
+import CharacterType from './dto/CreateCharacterDTO';
+import getRandomItem from './utils/getRandomItem';
 
 @Injectable()
 class CharacterService {
@@ -32,15 +33,15 @@ class CharacterService {
     private readonly promptGenerator: PromptGenerator
   ) { }
 
-  async createChar(createCharacterDTO: CharacterType) {
+  async createChar(createCharacterDTO: CharacterType): Promise<Either<DuplicatedContentException, CharacterDocument>> {
     const characterAlreadyExists = await this.characterRepository.findByName(createCharacterDTO.name);
 
     if (characterAlreadyExists) {
-      throw new DuplicatedContentException('Character already exists!');
+      return left(new DuplicatedContentException('Character already exists!'));
     }
 
     const result = await this.characterRepository.createChar(createCharacterDTO);
-    return result;
+    return right(result);
   }
 
   async help() {
@@ -58,21 +59,23 @@ class CharacterService {
   }
 
   async createRandomChar(charLevel: number, charName: string) {
-    const spellsList = await this.spellSchema.find({ level: charLevel }, { index: true, _id: false });
-    const featuresList = await this.featureSchema.find({ level: charLevel }, { index: true, _id: false });
-    const alignmentsList = await this.alignmentsSchema.find({}, { index: true, _id: false });
-    const classList = await this.classSchema.find({}, { index: true, _id: false });
-    const featsList = await this.featsSchema.find({}, { index: true, _id: false });
-    const magicItemsList = await this.magicItemSchema.find({}, { index: true, _id: false });
-    const proficienciesList = await this.proficiencySchema.find({}, { index: true, _id: false });
+    const queryProjection = { index: true, _id: false };
 
-    const choosedSpeel = (spellsList[Math.floor(Math.random() * spellsList.length)]).index;
-    const choosedFeature = (spellsList[Math.floor(Math.random() * featuresList.length)]).index;
-    const choosedAlignment = (alignmentsList[Math.floor(Math.random() * alignmentsList.length)]).index;
-    const choosedClass = (classList[Math.floor(Math.random() * classList.length)]).index;
-    const choosedFeat = (featsList[Math.floor(Math.random() * featsList.length)]).index;
-    const choosedMagicItem = (magicItemsList[Math.floor(Math.random() * magicItemsList.length)]).index;
-    const choosedProficiency = (proficienciesList[Math.floor(Math.random() * proficienciesList.length)]).index;
+    const spellsList = await this.spellSchema.find({ level: charLevel }, queryProjection);
+    const featuresList = await this.featureSchema.find({ level: charLevel }, queryProjection);
+    const alignmentsList = await this.alignmentsSchema.find({}, queryProjection);
+    const classList = await this.classSchema.find({}, queryProjection);
+    const featsList = await this.featsSchema.find({}, queryProjection);
+    const magicItemsList = await this.magicItemSchema.find({}, queryProjection);
+    const proficienciesList = await this.proficiencySchema.find({}, queryProjection);
+
+    const choosedSpeel = getRandomItem(spellsList).index;
+    const choosedFeature = getRandomItem(featuresList).index;
+    const choosedAlignment = getRandomItem(alignmentsList).index;
+    const choosedClass = getRandomItem(classList).index;
+    const choosedFeat = getRandomItem(featsList).index;
+    const choosedMagicItem = getRandomItem(magicItemsList).index;
+    const choosedProficiency = getRandomItem(proficienciesList).index;
 
     const characterSheet = {
       name: charName,

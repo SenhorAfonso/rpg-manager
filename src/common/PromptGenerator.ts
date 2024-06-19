@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { CharacterDocument } from 'src/character/schemas/character-schema';
+import { MonsterDocument } from 'src/populate/schemas/monsters-schema';
 
 @Injectable()
 class PromptGenerator {
@@ -20,14 +22,14 @@ class PromptGenerator {
     9. Nunca faça perguntas ao jogador sobre o que vai acontecer em seguida. Se o jogador disser que quer entrar em uma casa, ao invés de perguntar para ele o que ele encontrará lá dentro, você deve inventar um cenário e moradores e dizer ao jogar que foi isso que ele encontrou.`;
   }
 
-  firstRoundPrompt(playersSheets): string {
+  firstRoundPrompt(playersSheets: CharacterDocument[]): string {
     return `Você é o mestre de um mundo de fantasia repleto de magia, criaturas místicas e segredos antigos. Sua função é narrar os acontecimentos de um jogo RPG de mesa que está sendo jogado pelos jogadores a seguir. Lembre-se de sempre seguir as regras gerais.\
       
     Jogadores:
     ${JSON.stringify(playersSheets)}.`;
   }
 
-  otherRoundsPrompt(action, generalRules): string {
+  otherRoundsPrompt(action: Record<string, string>, generalRules: string): string {
     return `Diante da situação em que nossos heróis se encontram, eles vão tomar as seguintes ações: ${JSON.stringify(action)}
 
     ${generalRules}
@@ -35,7 +37,7 @@ class PromptGenerator {
     O que aconteceu com nossos heróis depois dessa ação? Se o inimigo foi derrotado, escreva: FIM DE COMBATE`;
   }
 
-  preCombatPrompt(enemySheet): string {
+  preCombatPrompt(enemySheet: MonsterDocument): string {
     return `Os jogadores se encontram com um inimigo desconhecido que vai sendo revelado aos poucos.
     O inimigo em questão possui a seguinte ficha: ${JSON.stringify(enemySheet)}.
     
@@ -46,7 +48,7 @@ class PromptGenerator {
     return 'Os jogadores derrotaram o inimigo, este deixou cair 3 itens preciosos. Que itens são esses?';
   }
 
-  createLore(characterSheet: string | null, requirements?: string): string {
+  createLore(characterSheet: string, requirements?: string): string {
     if (requirements) {
       return `
       Com base nessas informações: ${characterSheet} e nas observações fornecidas pelo usuário: ${requirements},

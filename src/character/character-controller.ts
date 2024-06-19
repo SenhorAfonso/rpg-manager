@@ -1,5 +1,6 @@
 import { Controller, Body, Post, UseGuards, UseInterceptors, UsePipes, Get, ValidationPipe } from '@nestjs/common';
 import AuthorizationGuard from 'src/common/guards/AuthorizationGuard';
+import { isLeft,  getError, getResult } from 'src/common/types/either';
 import CharacterService from './character-service';
 import ValidateCharInfo from './pipes/ValidateCharInfo';
 import CharacterType from './dto/CreateCharacterDTO';
@@ -20,7 +21,11 @@ class CharacterController {
     @Body() createCharacterDTO: CharacterType
   ) {
     const result = await this.characterService.createChar(createCharacterDTO);
-    return result;
+    if (isLeft(result)) {
+      return getError(result);
+    }
+
+    return getResult(result);
   }
 
   @Get('/help')
