@@ -16,6 +16,7 @@ class ValidateCharInfo implements PipeTransform {
       const response = await fetch(`https://www.dnd5eapi.co/api/${attribute}/${value}`);
       const responseBody = await response.json();
       if (responseBody.error) {
+        console.log(`https://www.dnd5eapi.co/api/${attribute}/${value}`)
         throw new BadRequestException(`${attribute} not found`);
       }
     });

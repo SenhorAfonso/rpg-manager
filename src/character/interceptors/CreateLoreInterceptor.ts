@@ -14,13 +14,7 @@ class CreateLoreInterceptor implements NestInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler<any>): Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest();
     const { lore, body } = request;
-    let prompt: string;
-
-    if (lore) {
-      prompt = this.promptGenerator.createLore(JSON.stringify(body), lore);
-    } else {
-      prompt = this.promptGenerator.createLore(JSON.stringify(body), lore);;
-    }
+    const prompt = this.promptGenerator.createLore(JSON.stringify(body), lore as string);
 
     request.body.lore = await this.gemini.sendGenericPrompt(prompt);;
 

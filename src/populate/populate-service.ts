@@ -28,6 +28,8 @@ class PopulateService {
   }
 
   async populate(): Promise<void> {
+    let counterGroup: number = 1;
+
     for (const [url, schema] of this.UrlSchemaMap) {
       const request = await fetch(`https://www.dnd5eapi.co${url}`);
       const requestBody = (await request.json()).results;
@@ -42,7 +44,11 @@ class PopulateService {
 
         arrayOfObjectsToSave.push(objectsToSave);
 
-        console.log(`Saving ${url.replace('/api/', '')}. ${counter}/${total}`);
+        console.log(`Saving ${url.replace('/api/', '')}. ${counter}/${total} - ${counterGroup}/10`);
+        setTimeout(() => {
+          console.clear();
+        }, 100);
+
         counter += 1;
       }
 
@@ -52,6 +58,7 @@ class PopulateService {
         return;
       }
 
+      counterGroup += 1;
     }
   }
 
